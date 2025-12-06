@@ -115,7 +115,19 @@ serve(async (req) => {
       throw new Error('Google Cloud credentials not configured');
     }
 
-    const credentials: ServiceAccountCredentials = JSON.parse(credentialsJson);
+    console.log('Credentials length:', credentialsJson.length);
+    console.log('Credentials starts with:', credentialsJson.substring(0, 20));
+    
+    // Try to parse credentials, with better error handling
+    let credentials: ServiceAccountCredentials;
+    try {
+      credentials = JSON.parse(credentialsJson);
+    } catch (parseError) {
+      console.error('Failed to parse credentials JSON:', parseError);
+      console.error('First 100 chars:', credentialsJson.substring(0, 100));
+      throw new Error('Invalid credentials format - please re-enter the GCP service account JSON');
+    }
+    
     console.log('Using project:', credentials.project_id);
     
     // Get request parameters
