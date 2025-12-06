@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { RefreshCw, Check, AlertTriangle, XCircle, Info, Loader2 } from "lucide-react";
+import { RefreshCw, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -18,13 +18,16 @@ interface LogEntryData {
   message: string;
   traceId: string;
   remoteIp: string;
+  classification: string;
+  risk: number;
+  decision: string;
 }
 
 interface LogStats {
   total: number;
-  info: number;
-  warning: number;
-  error: number;
+  allowed: number;
+  challenged: number;
+  blocked: number;
 }
 
 // Custom hook for fetching logs
@@ -70,9 +73,9 @@ function useCloudRunLogs() {
 
   const stats: LogStats = {
     total: entries.length,
-    info: entries.filter(e => ['INFO', 'NOTICE', 'DEFAULT'].includes(e.severity?.toUpperCase() || 'DEFAULT')).length,
-    warning: entries.filter(e => e.severity?.toUpperCase() === 'WARNING').length,
-    error: entries.filter(e => ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'].includes(e.severity?.toUpperCase() || '')).length,
+    allowed: entries.filter(e => e.decision === 'ALLOW').length,
+    challenged: entries.filter(e => e.decision === 'CHALLENGE').length,
+    blocked: entries.filter(e => e.decision === 'BLOCK').length,
   };
 
   return { entries, isLoading, error, isConnected, refresh: fetchLogs, stats };
@@ -99,16 +102,16 @@ function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
             <div className="text-xs text-muted-foreground tracking-wider">TOTAL</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-foreground font-mono">{stats.info}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">INFO</div>
+            <div className="text-2xl font-bold text-foreground font-mono">{stats.allowed}</div>
+            <div className="text-xs text-muted-foreground tracking-wider">ALLOWED</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-foreground font-mono">{stats.warning}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">WARNING</div>
+            <div className="text-2xl font-bold text-warning font-mono">{stats.challenged}</div>
+            <div className="text-xs text-muted-foreground tracking-wider">CHALLENGED</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-foreground font-mono">{stats.error}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">ERROR</div>
+            <div className="text-2xl font-bold text-destructive font-mono">{stats.blocked}</div>
+            <div className="text-xs text-muted-foreground tracking-wider">BLOCKED</div>
           </div>
         </div>
 
@@ -140,60 +143,50 @@ function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
 // Log Entry Component
 function LogEntry({ entry }: { entry: LogEntryData }) {
   const formattedTime = formatTimestamp(entry.timestamp);
-  const statusCode = typeof entry.status === 'string' ? parseInt(entry.status) : entry.status;
-  const severityConfig = getSeverityConfig(entry.severity);
+  const isAllowed = entry.decision === 'ALLOW';
+  const isChallenged = entry.decision === 'CHALLENGE';
   
   return (
     <div className={cn(
-      "py-3 px-4 grid grid-cols-[auto_80px_1fr_120px_100px_80px_80px] gap-4 items-center border-l-4 transition-all duration-200 hover:bg-secondary/50",
-      severityConfig.borderColor
+      "py-3 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 items-center border-l-4 transition-all duration-200 hover:bg-secondary/50",
+      isAllowed ? "border-l-success" : isChallenged ? "border-l-warning" : "border-l-destructive"
     )}>
       <div className="flex items-center justify-center w-8">
-        {severityConfig.icon}
+        <Check className={cn("h-5 w-5", isAllowed ? "text-success" : isChallenged ? "text-warning" : "text-destructive")} />
       </div>
 
-      <div className="font-mono text-sm text-muted-foreground">
+      <div className="font-mono text-sm text-primary">
         {entry.traceId || entry.id.substring(0, 8)}
       </div>
 
-      <div className="flex items-center gap-3 min-w-0">
-        <span className="font-mono font-semibold text-foreground">
-          {entry.method || 'LOG'} {entry.path || entry.message.substring(0, 50)}
+      <div className="flex items-center gap-4 min-w-0">
+        <span className="font-semibold text-foreground">
+          {entry.method} {entry.path ? new URL(entry.path, 'http://localhost').pathname : ''}
         </span>
         <Badge
           variant="outline"
-          className={cn(
-            "text-xs px-2 py-0.5 font-medium",
-            entry.serviceName === 'gandalf-gateway' 
-              ? "border-primary/50 text-primary bg-primary/10"
-              : "border-info/50 text-info bg-info/10"
-          )}
+          className="text-xs px-3 py-1 font-medium border-primary/50 text-primary bg-primary/10"
         >
-          {entry.serviceName === 'gandalf-gateway' ? 'GATEWAY' : 'MOCKAPP'}
+          {entry.classification}
         </Badge>
       </div>
 
-      <div className="text-sm text-muted-foreground truncate">
-        {entry.serviceName}
-      </div>
-
       <div className="text-right">
-        {statusCode ? (
-          <span className={cn(
-            "font-mono font-medium",
-            statusCode >= 500 ? "text-destructive" :
-            statusCode >= 400 ? "text-warning" :
-            "text-success"
-          )}>
-            {statusCode}
-          </span>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        )}
+        <span className="text-muted-foreground">Risk: </span>
+        <span className="font-semibold text-foreground">{entry.risk}</span>
       </div>
 
-      <div className="text-right font-mono text-sm text-muted-foreground">
-        {entry.latency || '—'}
+      <div className="text-center">
+        <Badge
+          className={cn(
+            "text-xs px-4 py-1 font-semibold",
+            isAllowed ? "bg-success text-success-foreground hover:bg-success/90" :
+            isChallenged ? "bg-warning text-warning-foreground hover:bg-warning/90" :
+            "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          )}
+        >
+          {entry.decision}
+        </Badge>
       </div>
 
       <div className="text-right font-mono text-sm text-muted-foreground">
@@ -203,34 +196,6 @@ function LogEntry({ entry }: { entry: LogEntryData }) {
   );
 }
 
-function getSeverityConfig(severity: string) {
-  switch (severity?.toUpperCase()) {
-    case 'ERROR':
-    case 'CRITICAL':
-    case 'ALERT':
-    case 'EMERGENCY':
-      return {
-        icon: <XCircle className="h-4 w-4 text-destructive" />,
-        borderColor: "border-l-destructive",
-      };
-    case 'WARNING':
-      return {
-        icon: <AlertTriangle className="h-4 w-4 text-warning" />,
-        borderColor: "border-l-warning",
-      };
-    case 'INFO':
-    case 'NOTICE':
-      return {
-        icon: <Info className="h-4 w-4 text-info" />,
-        borderColor: "border-l-info",
-      };
-    default:
-      return {
-        icon: <Check className="h-4 w-4 text-success" />,
-        borderColor: "border-l-success",
-      };
-  }
-}
 
 function formatTimestamp(timestamp: string): string {
   if (!timestamp) return '—';
@@ -299,13 +264,12 @@ function LogViewer({ entries, isLoading, error }: {
 
   return (
     <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background" style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--border)) transparent' }}>
-      <div className="sticky top-0 z-10 bg-card border-b border-border py-2 px-4 grid grid-cols-[auto_80px_1fr_120px_100px_80px_80px] gap-4 text-xs text-muted-foreground font-medium tracking-wider">
+      <div className="sticky top-0 z-10 bg-card border-b border-border py-2 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 text-xs text-muted-foreground font-medium tracking-wider">
         <div className="w-8" />
         <div>TRACE</div>
         <div>REQUEST</div>
-        <div>SERVICE</div>
-        <div className="text-right">STATUS</div>
-        <div className="text-right">LATENCY</div>
+        <div className="text-right">RISK</div>
+        <div className="text-center">DECISION</div>
         <div className="text-right">TIME</div>
       </div>
 

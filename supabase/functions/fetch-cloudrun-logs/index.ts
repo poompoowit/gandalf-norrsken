@@ -170,13 +170,18 @@ serve(async (req) => {
     const logsData = await logsResponse.json();
     console.log('Fetched', logsData.entries?.length || 0, 'log entries');
     
-    // Transform the log entries to a more usable format
-    const entries = (logsData.entries || []).map((entry: any, index: number) => {
+    // Transform and filter for HTTP request logs only
+    const allEntries = (logsData.entries || []).map((entry: any, index: number) => {
       const httpRequest = entry.httpRequest || {};
       const jsonPayload = entry.jsonPayload || {};
       const textPayload = entry.textPayload || '';
       
-      // Extract relevant fields
+      // Extract Gandalf-specific fields from jsonPayload or labels
+      const classification = jsonPayload.classification || jsonPayload.type || entry.labels?.classification || 'HUMAN';
+      const risk = jsonPayload.risk || jsonPayload.risk_score || entry.labels?.risk || 0;
+      const decision = jsonPayload.decision || jsonPayload.action || entry.labels?.decision || 
+        (httpRequest.status && httpRequest.status < 400 ? 'ALLOW' : 'BLOCK');
+      
       return {
         id: entry.insertId || `log-${index}`,
         timestamp: entry.timestamp,
@@ -190,10 +195,15 @@ serve(async (req) => {
         remoteIp: httpRequest.remoteIp || '',
         message: textPayload || jsonPayload.message || entry.protoPayload?.status?.message || '',
         traceId: entry.trace?.split('/').pop()?.substring(0, 8) || '',
-        labels: entry.labels || {},
-        jsonPayload: jsonPayload,
+        classification,
+        risk,
+        decision,
+        isHttpRequest: !!(httpRequest.requestMethod || jsonPayload.method),
       };
     });
+    
+    // Filter to only include HTTP request logs
+    const entries = allEntries.filter((entry: any) => entry.isHttpRequest);
 
     return new Response(JSON.stringify({ entries, nextPageToken: logsData.nextPageToken }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
