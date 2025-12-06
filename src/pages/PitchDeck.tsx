@@ -18,31 +18,45 @@ import {
   Network,
   Clock
 } from "lucide-react";
-import { useState } from "react";
-
-interface Slide {
-  id: number;
-  title: string;
-  subtitle?: string;
-  content: React.ReactNode;
-}
 
 const PitchDeck = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 p-4 border-b border-border bg-background/80 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <Button asChild variant="ghost" size="sm" className="gap-2">
+            <Link to="/">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Link>
+          </Button>
+          <Button asChild size="sm" className="gap-2">
+            <Link to="/logs">
+              View Live Logs
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+      </header>
 
-  const slides: Slide[] = [
-    {
-      id: 1,
-      title: "Gandalf Gateway",
-      subtitle: "Sovereign Bot Identity & Community-Driven Verification",
-      content: (
-        <div className="flex flex-col items-center gap-8">
+      {/* Content */}
+      <main className="max-w-5xl mx-auto px-6 py-12 space-y-24">
+        
+        {/* Section 1: Hero */}
+        <section className="text-center space-y-8 animate-fade-in">
           <div className="text-8xl">🧙</div>
-          <p className="text-xl text-muted-foreground max-w-2xl text-center">
+          <div>
+            <h1 className="text-5xl font-bold text-foreground mb-4">Gandalf Gateway</h1>
+            <p className="text-xl text-muted-foreground">
+              Sovereign Bot Identity & Community-Driven Verification
+            </p>
+          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             A framework for decentralized bot identity verification that protects your services 
             from malicious automation while welcoming legitimate traffic.
           </p>
-          <div className="flex gap-8 mt-8">
+          <div className="flex gap-8 justify-center mt-8">
             <div className="flex flex-col items-center gap-2">
               <div className="w-20 h-20 rounded-full bg-success/20 flex items-center justify-center">
                 <User className="w-10 h-10 text-success" />
@@ -62,59 +76,59 @@ const PitchDeck = () => {
               <span className="text-sm text-muted-foreground">Bad Bot</span>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      title: "The Problem: Asymmetric Warfare",
-      subtitle: "Legacy Trust Mechanisms Are Failing",
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-destructive flex items-center gap-2">
-              <X className="w-5 h-5" /> User-Agent Strings
-            </h3>
-            <p className="text-muted-foreground">
-              Self-declared with zero cryptographic integrity. Trivially spoofable by malicious actors.
-            </p>
+        </section>
+
+        {/* Section 2: The Problem */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">The Problem: Asymmetric Warfare</h2>
+            <p className="text-lg text-muted-foreground">Legacy Trust Mechanisms Are Failing</p>
           </div>
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-destructive flex items-center gap-2">
-              <X className="w-5 h-5" /> IP Reputation
-            </h3>
-            <p className="text-muted-foreground">
-              In the era of IPv4 exhaustion and CGNAT, IP addresses are increasingly shared. 
-              Legitimate bots get blocked due to bad neighbors.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 rounded-xl bg-card border border-border space-y-3">
+              <h3 className="text-lg font-semibold text-destructive flex items-center gap-2">
+                <X className="w-5 h-5" /> User-Agent Strings
+              </h3>
+              <p className="text-muted-foreground">
+                Self-declared with zero cryptographic integrity. Trivially spoofable by malicious actors.
+              </p>
+            </div>
+            <div className="p-6 rounded-xl bg-card border border-border space-y-3">
+              <h3 className="text-lg font-semibold text-destructive flex items-center gap-2">
+                <X className="w-5 h-5" /> IP Reputation
+              </h3>
+              <p className="text-muted-foreground">
+                In the era of IPv4 exhaustion and CGNAT, IP addresses are increasingly shared. 
+                Legitimate bots get blocked due to bad neighbors.
+              </p>
+            </div>
+            <div className="p-6 rounded-xl bg-card border border-border space-y-3">
+              <h3 className="text-lg font-semibold text-destructive flex items-center gap-2">
+                <X className="w-5 h-5" /> Centralized Gatekeeping
+              </h3>
+              <p className="text-muted-foreground">
+                Small labs cannot register with enterprise security vendors. 
+                Treated as "guilty until proven innocent."
+              </p>
+            </div>
+            <div className="p-6 rounded-xl bg-card border border-border space-y-3">
+              <h3 className="text-lg font-semibold text-destructive flex items-center gap-2">
+                <X className="w-5 h-5" /> Collateral Damage
+              </h3>
+              <p className="text-muted-foreground">
+                When botnets are detected, entire IP ranges get blocked, 
+                taking legitimate research crawlers offline.
+              </p>
+            </div>
           </div>
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-destructive flex items-center gap-2">
-              <X className="w-5 h-5" /> Centralized Gatekeeping
-            </h3>
-            <p className="text-muted-foreground">
-              Small labs cannot register with enterprise security vendors. 
-              Treated as "guilty until proven innocent."
-            </p>
+        </section>
+
+        {/* Section 3: Traffic Classification */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Traffic Classification</h2>
+            <p className="text-lg text-muted-foreground">How Gandalf Categorizes Every Request</p>
           </div>
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-destructive flex items-center gap-2">
-              <X className="w-5 h-5" /> Collateral Damage
-            </h3>
-            <p className="text-muted-foreground">
-              When botnets are detected, entire IP ranges get blocked, 
-              taking legitimate research crawlers offline.
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      title: "Traffic Classification",
-      subtitle: "How Gandalf Categorizes Every Request",
-      content: (
-        <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-xl bg-success/10 border border-success/30 space-y-4">
               <div className="flex items-center gap-3">
@@ -206,15 +220,14 @@ const PitchDeck = () => {
               </div>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      title: "The Solution: Cryptographic Identity",
-      subtitle: "RFC 9421 HTTP Message Signatures",
-      content: (
-        <div className="space-y-8">
+        </section>
+
+        {/* Section 4: The Solution */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">The Solution: Cryptographic Identity</h2>
+            <p className="text-lg text-muted-foreground">RFC 9421 HTTP Message Signatures</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-xl bg-card border border-border space-y-3">
               <Key className="w-8 h-8 text-primary" />
@@ -245,15 +258,14 @@ const PitchDeck = () => {
             <div><span className="text-info">Signature:</span> sig1=:K2hE...Base64...==:</div>
             <div><span className="text-info">Signature-Agent:</span> MyLabBot/1.0</div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 5,
-      title: "Decentralized Discovery",
-      subtitle: "Self-Sovereign Identity Without Gatekeepers",
-      content: (
-        <div className="space-y-8">
+        </section>
+
+        {/* Section 5: Decentralized Discovery */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Decentralized Discovery</h2>
+            <p className="text-lg text-muted-foreground">Self-Sovereign Identity Without Gatekeepers</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -291,15 +303,14 @@ const PitchDeck = () => {
               Convince community maintainers, not corporate gatekeepers.
             </p>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 6,
-      title: "Policy Layer: Good Bot Behavior",
-      subtitle: "Cryptographic Privilege Comes with Responsibility",
-      content: (
-        <div className="space-y-6">
+        </section>
+
+        {/* Section 6: Policy Layer */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Policy Layer: Good Bot Behavior</h2>
+            <p className="text-lg text-muted-foreground">Cryptographic Privilege Comes with Responsibility</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-6 rounded-xl bg-card border border-border space-y-4">
               <div className="flex items-center gap-3">
@@ -353,15 +364,14 @@ const PitchDeck = () => {
               429 → Wait Retry-After. 503 → Back off 5-15 minutes. 403 + CAPTCHA → Abandon path.
             </p>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 7,
-      title: "Detection Flow",
-      subtitle: "How Gandalf Processes Each Request",
-      content: (
-        <div className="space-y-6">
+        </section>
+
+        {/* Section 7: Detection Flow */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Detection Flow</h2>
+            <p className="text-lg text-muted-foreground">How Gandalf Processes Each Request</p>
+          </div>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {[
               { step: 1, title: "Request", icon: Globe, color: "text-muted-foreground" },
@@ -401,72 +411,72 @@ const PitchDeck = () => {
               <div className="text-sm text-muted-foreground">Malicious patterns detected</div>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 8,
-      title: "Verification Methods Compared",
-      subtitle: "Why RFC 9421 is the Ideal Standard",
-      content: (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left p-4">Method</th>
-                <th className="text-left p-4">Verification Basis</th>
-                <th className="text-left p-4">Spoofability</th>
-                <th className="text-left p-4">Barrier to Entry</th>
-                <th className="text-left p-4">Small Lab Suitability</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-border/50">
-                <td className="p-4 font-medium">IP Reputation</td>
-                <td className="p-4 text-muted-foreground">History of IP</td>
-                <td className="p-4 text-warning">Low (easy to rotate)</td>
-                <td className="p-4 text-destructive">High</td>
-                <td className="p-4 text-destructive">Low</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-4 font-medium">User-Agent</td>
-                <td className="p-4 text-muted-foreground">Self-Declaration</td>
-                <td className="p-4 text-destructive">High (trivial)</td>
-                <td className="p-4 text-success">None</td>
-                <td className="p-4 text-destructive">Low</td>
-              </tr>
-              <tr className="border-b border-border/50">
-                <td className="p-4 font-medium">mTLS</td>
-                <td className="p-4 text-muted-foreground">Client Certificate</td>
-                <td className="p-4 text-success">None</td>
-                <td className="p-4 text-destructive">High (complex)</td>
-                <td className="p-4 text-warning">Medium</td>
-              </tr>
-              <tr className="border-b border-border/50 bg-success/5">
-                <td className="p-4 font-semibold text-success">RFC 9421</td>
-                <td className="p-4 text-muted-foreground">Crypto Signature</td>
-                <td className="p-4 text-success">None</td>
-                <td className="p-4 text-success">Low (open source)</td>
-                <td className="p-4 text-success font-semibold">High (Ideal)</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-medium">Proof of Work</td>
-                <td className="p-4 text-muted-foreground">CPU Expenditure</td>
-                <td className="p-4 text-success">Low</td>
-                <td className="p-4 text-destructive">High (costly)</td>
-                <td className="p-4 text-destructive">Low</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ),
-    },
-    {
-      id: 9,
-      title: "The Tiered Internet",
-      subtitle: "A New Trust Hierarchy for the Agentic Web",
-      content: (
-        <div className="space-y-6">
+        </section>
+
+        {/* Section 8: Comparison Table */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Verification Methods Compared</h2>
+            <p className="text-lg text-muted-foreground">Why RFC 9421 is the Ideal Standard</p>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/30">
+                <tr className="border-b border-border">
+                  <th className="text-left p-4">Method</th>
+                  <th className="text-left p-4">Verification Basis</th>
+                  <th className="text-left p-4">Spoofability</th>
+                  <th className="text-left p-4">Barrier to Entry</th>
+                  <th className="text-left p-4">Small Lab Suitability</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-border/50">
+                  <td className="p-4 font-medium">IP Reputation</td>
+                  <td className="p-4 text-muted-foreground">History of IP</td>
+                  <td className="p-4 text-warning">Low (easy to rotate)</td>
+                  <td className="p-4 text-destructive">High</td>
+                  <td className="p-4 text-destructive">Low</td>
+                </tr>
+                <tr className="border-b border-border/50">
+                  <td className="p-4 font-medium">User-Agent</td>
+                  <td className="p-4 text-muted-foreground">Self-Declaration</td>
+                  <td className="p-4 text-destructive">High (trivial)</td>
+                  <td className="p-4 text-success">None</td>
+                  <td className="p-4 text-destructive">Low</td>
+                </tr>
+                <tr className="border-b border-border/50">
+                  <td className="p-4 font-medium">mTLS</td>
+                  <td className="p-4 text-muted-foreground">Client Certificate</td>
+                  <td className="p-4 text-success">None</td>
+                  <td className="p-4 text-destructive">High (complex)</td>
+                  <td className="p-4 text-warning">Medium</td>
+                </tr>
+                <tr className="border-b border-border/50 bg-success/5">
+                  <td className="p-4 font-semibold text-success">RFC 9421</td>
+                  <td className="p-4 text-muted-foreground">Crypto Signature</td>
+                  <td className="p-4 text-success">None</td>
+                  <td className="p-4 text-success">Low (open source)</td>
+                  <td className="p-4 text-success font-semibold">High (Ideal)</td>
+                </tr>
+                <tr>
+                  <td className="p-4 font-medium">Proof of Work</td>
+                  <td className="p-4 text-muted-foreground">CPU Expenditure</td>
+                  <td className="p-4 text-success">Low</td>
+                  <td className="p-4 text-destructive">High (costly)</td>
+                  <td className="p-4 text-destructive">Low</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Section 9: Tiered Internet */}
+        <section className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-2">The Tiered Internet</h2>
+            <p className="text-lg text-muted-foreground">A New Trust Hierarchy for the Agentic Web</p>
+          </div>
           <div className="space-y-4">
             <div className="p-6 rounded-xl bg-destructive/10 border border-destructive/30">
               <div className="flex items-center justify-between mb-4">
@@ -519,16 +529,15 @@ const PitchDeck = () => {
               </p>
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: 10,
-      title: "Summary: The Gandalf Rule",
-      subtitle: "You Shall Not Pass (Unless Verified)",
-      content: (
-        <div className="space-y-8">
-          <div className="text-6xl text-center">🧙</div>
+        </section>
+
+        {/* Section 10: Summary */}
+        <section className="space-y-8 pb-12">
+          <div className="text-center">
+            <div className="text-6xl mb-4">🧙</div>
+            <h2 className="text-3xl font-bold text-foreground mb-2">Summary: The Gandalf Rule</h2>
+            <p className="text-lg text-muted-foreground">You Shall Not Pass (Unless Verified)</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl bg-card border border-border">
               <div className="flex items-center gap-3 mb-2">
@@ -591,100 +600,15 @@ const PitchDeck = () => {
             </div>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center pt-8">
             <Button asChild size="lg" className="gap-2">
               <Link to="/logs">
                 View Live Logs <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>
           </div>
-        </div>
-      ),
-    },
-  ];
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="p-4 border-b border-border flex items-center justify-between">
-        <Button asChild variant="ghost" size="sm" className="gap-2">
-          <Link to="/">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-        </Button>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>{currentSlide + 1} / {slides.length}</span>
-        </div>
-      </header>
-
-      {/* Slide Content */}
-      <main className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
-        <div className="max-w-5xl w-full">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">
-              {slides[currentSlide].title}
-            </h1>
-            {slides[currentSlide].subtitle && (
-              <p className="text-xl text-muted-foreground">
-                {slides[currentSlide].subtitle}
-              </p>
-            )}
-          </div>
-          
-          <div className="min-h-[400px]">
-            {slides[currentSlide].content}
-          </div>
-        </div>
+        </section>
       </main>
-
-      {/* Navigation */}
-      <footer className="p-4 border-t border-border">
-        <div className="flex items-center justify-between max-w-5xl mx-auto">
-          <Button
-            variant="outline"
-            onClick={prevSlide}
-            disabled={currentSlide === 0}
-            className="gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Previous
-          </Button>
-
-          {/* Slide Indicators */}
-          <div className="flex gap-2">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentSlide
-                    ? "bg-primary"
-                    : "bg-muted hover:bg-muted-foreground/50"
-                }`}
-              />
-            ))}
-          </div>
-
-          <Button
-            variant="outline"
-            onClick={nextSlide}
-            disabled={currentSlide === slides.length - 1}
-            className="gap-2"
-          >
-            Next
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </footer>
     </div>
   );
 };
