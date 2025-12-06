@@ -31,8 +31,17 @@ interface LogStats {
   blocked: number;
 }
 
+type TimeRange = 5 | 15 | 60 | 240;
+
+const TIME_RANGES: { value: TimeRange; label: string }[] = [
+  { value: 5, label: '5m' },
+  { value: 15, label: '15m' },
+  { value: 60, label: '1h' },
+  { value: 240, label: '4h' },
+];
+
 // Custom hook for fetching logs
-function useCloudRunLogs() {
+function useCloudRunLogs(timeRange: TimeRange) {
   const [entries, setEntries] = useState<LogEntryData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +53,7 @@ function useCloudRunLogs() {
       setError(null);
 
       const { data, error: fnError } = await supabase.functions.invoke('fetch-cloudrun-logs', {
-        body: { limit: 100 },
+        body: { limit: 100, timeRangeMinutes: timeRange },
       });
 
       if (fnError) {
@@ -64,7 +73,7 @@ function useCloudRunLogs() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [timeRange]);
 
   useEffect(() => {
     fetchLogs();
@@ -80,6 +89,36 @@ function useCloudRunLogs() {
   };
 
   return { entries, isLoading, error, isConnected, refresh: fetchLogs, stats };
+}
+
+// Time Range Selector Component
+function TimeRangeSelector({ 
+  value, 
+  onChange 
+}: { 
+  value: TimeRange; 
+  onChange: (value: TimeRange) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary/50 border border-border/50">
+      {TIME_RANGES.map((range) => (
+        <Button
+          key={range.value}
+          variant="ghost"
+          size="sm"
+          onClick={() => onChange(range.value)}
+          className={cn(
+            "px-3 py-1.5 h-auto text-sm font-medium transition-all",
+            value === range.value
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+          )}
+        >
+          {range.label}
+        </Button>
+      ))}
+    </div>
+  );
 }
 
 // Stat Card Component
@@ -153,11 +192,13 @@ function LiveIndicator({ isConnected }: { isConnected: boolean }) {
 }
 
 // Header Component
-function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
+function LogHeader({ stats, isConnected, isLoading, onRefresh, timeRange, onTimeRangeChange }: {
   stats: LogStats;
   isConnected: boolean;
   isLoading: boolean;
   onRefresh: () => void;
+  timeRange: TimeRange;
+  onTimeRangeChange: (value: TimeRange) => void;
 }) {
   return (
     <header className="dashboard-header border-b border-border/50">
@@ -174,6 +215,7 @@ function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
         </div>
 
         <div className="flex items-center gap-3">
+          <TimeRangeSelector value={timeRange} onChange={onTimeRangeChange} />
           <Button
             variant="outline"
             size="sm"
@@ -380,11 +422,19 @@ function LogViewer({ entries, isLoading, error }: {
 
 // Main Logs Page
 const Logs = () => {
-  const { entries, isLoading, error, isConnected, refresh, stats } = useCloudRunLogs();
+  const [timeRange, setTimeRange] = useState<TimeRange>(60);
+  const { entries, isLoading, error, isConnected, refresh, stats } = useCloudRunLogs(timeRange);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <LogHeader stats={stats} isConnected={isConnected} isLoading={isLoading} onRefresh={refresh} />
+      <LogHeader 
+        stats={stats} 
+        isConnected={isConnected} 
+        isLoading={isLoading} 
+        onRefresh={refresh}
+        timeRange={timeRange}
+        onTimeRangeChange={setTimeRange}
+      />
       <LogViewer entries={entries} isLoading={isLoading} error={error} />
     </div>
   );
