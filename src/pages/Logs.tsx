@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/Footer";
 
 // Types
 interface LogEntryData {
@@ -436,6 +437,7 @@ const Logs = () => {
         onTimeRangeChange={setTimeRange}
       />
       <LogViewer entries={entries} isLoading={isLoading} error={error} />
+      <Footer />
     </div>
   );
 };
