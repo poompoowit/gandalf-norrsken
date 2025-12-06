@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -78,6 +78,12 @@ export default {
         "risk-low": "hsl(var(--risk-low))",
         "risk-medium": "hsl(var(--risk-medium))",
         "risk-high": "hsl(var(--risk-high))",
+        // Named brand colors
+        "mystic-blue": "hsl(211 49% 23%)",
+        "wizard-blue": "hsl(202 40% 55%)",
+        "arcane-purple": "hsl(254 30% 42%)",
+        "cyber-teal": "hsl(179 55% 51%)",
+        "graphite": "hsl(210 14% 14%)",
       },
       borderRadius: {
         lg: "var(--radius)",
