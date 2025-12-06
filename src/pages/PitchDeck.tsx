@@ -756,7 +756,7 @@ const PitchDeck = () => {
               </a>
             </div>
             <a 
-              href="https://www.youtube.com/watch?v=SSAKVqXt2-A" 
+              href="https://youtu.be/Fcqh9bwEr_Q"
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-destructive hover:text-destructive/80 transition-colors"
