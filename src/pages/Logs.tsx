@@ -53,7 +53,7 @@ function useCloudRunLogs(timeRange: TimeRange) {
       setError(null);
 
       const { data, error: fnError } = await supabase.functions.invoke('fetch-cloudrun-logs', {
-        body: { limit: 1000, timeRangeMinutes: timeRange, maxPages: 5 },
+        body: { limit: 2000, timeRangeMinutes: timeRange, maxPages: 10, httpOnly: true },
       });
 
       if (fnError) {
