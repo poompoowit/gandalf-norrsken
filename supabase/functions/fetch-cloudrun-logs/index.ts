@@ -131,15 +131,21 @@ serve(async (req) => {
     console.log('Using project:', credentials.project_id);
     
     // Get request parameters
-    const { serviceName, limit = 100 } = await req.json();
+    const { serviceName, limit = 100, timeRangeMinutes = 60 } = await req.json();
+    
+    // Calculate time filter
+    const now = new Date();
+    const startTime = new Date(now.getTime() - timeRangeMinutes * 60 * 1000);
+    const timeFilter = `timestamp >= "${startTime.toISOString()}"`;
+    
+    console.log('Time range:', timeRangeMinutes, 'minutes, from:', startTime.toISOString());
     
     // Get access token
     const accessToken = await getAccessToken(credentials);
     console.log('Successfully obtained access token');
     
-    // Build the filter for Cloud Run logs
-    // Filter for both gateway and mockapp services
-    const filter = `resource.type="cloud_run_revision" AND (resource.labels.service_name="gandalf-gateway" OR resource.labels.service_name="gandalf-mockapp")`;
+    // Build the filter for Cloud Run logs with time range
+    const filter = `resource.type="cloud_run_revision" AND (resource.labels.service_name="gandalf-gateway" OR resource.labels.service_name="gandalf-mockapp") AND ${timeFilter}`;
     
     console.log('Fetching logs with filter:', filter);
     
