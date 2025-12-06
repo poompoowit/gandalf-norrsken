@@ -131,7 +131,7 @@ serve(async (req) => {
     console.log('Using project:', credentials.project_id);
     
     // Get request parameters
-    const { serviceName, limit = 100, timeRangeMinutes = 60 } = await req.json();
+    const { serviceName, limit = 500, timeRangeMinutes = 60 } = await req.json();
     
     // Calculate time filter
     const now = new Date();
@@ -210,8 +210,19 @@ serve(async (req) => {
     
     // Filter to only include HTTP request logs
     const entries = allEntries.filter((entry: any) => entry.isHttpRequest);
+    
+    console.log('HTTP request entries after filter:', entries.length, 'of', allEntries.length, 'total');
 
-    return new Response(JSON.stringify({ entries, nextPageToken: logsData.nextPageToken }), {
+    return new Response(JSON.stringify({ 
+      entries, 
+      nextPageToken: logsData.nextPageToken,
+      timeRange: {
+        startTime: startTime.toISOString(),
+        endTime: now.toISOString(),
+        minutes: timeRangeMinutes,
+      },
+      totalFetched: logsData.entries?.length || 0,
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
