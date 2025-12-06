@@ -10,7 +10,7 @@
   <img src="public/gandalf_meme.jpg" alt="You Shall Not Pass" width="400"/>
 </p>
 
-Gandalf the Gatekeeper is an AI-powered security layer that protects applications from large-scale misuse of headless browsers and harmful automation. By combining behavioral analysis, swarm detection, trust token verification, and adaptive traffic control, Gandalf distinguishes between legitimate users, good automation, and malicious bot swarms in real time.
+Gandalf the Gatekeeper is an AI-powered security layer that protects applications from large-scale misuse of headless browsers and harmful automation. By combining behavioral analysis, swarm detection, trust token verification, and adaptive traffic control, Gandalf distinguishes between legitimate users, good automation, and malicious bot swarms in real-time.
 
 **This project was designed and built during the Fixathon by the SU Heroes team.**
 
@@ -33,10 +33,10 @@ https://gandalf-norrsken.lovable.app/logs
 **GitHub Repository:**  
 https://github.com/poompoowit/gandalf-norrsken
 
-**Demo Video:**
+**Demo Video:**  
 https://youtu.be/Fcqh9bwEr_Q
 
-**Pitch Deck:**
+**Pitch Deck:**  
 https://gandalf-norrsken.lovable.app/pitch
 
 If you have questions, reach out via LinkedIn or email **hello@jadypamella.com**.
