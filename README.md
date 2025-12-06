@@ -22,16 +22,19 @@ Gandalf the Gatekeeper is an AI-powered security layer that protects application
 https://gandalf-gateway-fkbsfhcdlq-uc.a.run.app
 
 **Monitor Page:**  
-https://gandalf-gateway-fkbsfhcdlq-uc.a.run.app/bullet
+https://gandalf-norrsken.lovable.app
 
 **Protected Application:**  
 https://gandalf-gateway-839375693600.us-central1.run.app
 
 **Dashboard:**  
-https://gandalf-dashboard-480530547748.us-central1.run.app
+https://gandalf-norrsken.lovable.app/logs
 
 **GitHub Repository:**  
 https://github.com/poompoowit/gandalf-norrsken
+
+Demo
+https://youtu.be/Fcqh9bwEr_Q
 
 If you have questions, reach out via LinkedIn or email **hello@jadypamella.com**.
 
