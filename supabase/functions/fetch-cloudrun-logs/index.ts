@@ -236,7 +236,7 @@ serve(async (req) => {
         labels.type ||
         'HUMAN';
       
-      // Extract risk score - check multiple possible locations  
+      // Extract risk score - only from actual gandalf data, not responseSize
       const risk = 
         jsonPayload.risk || 
         jsonPayload.risk_score || 
@@ -245,11 +245,13 @@ serve(async (req) => {
         gandalfData.risk_score ||
         labels.risk || 
         labels.risk_score ||
-        httpRequest.responseSize || // Sometimes used as indicator
-        0;
+        0; // Default to 0 if no risk data available
       
-      // Extract decision - check multiple possible locations
-      // For blocked requests, status >= 400 typically indicates block
+      // Extract decision based on HTTP status code
+      // Status 101 = WebSocket upgrade (ALLOW)
+      // Status 2xx = Success (ALLOW)
+      // Status 403/429 = Blocked
+      // Status 4xx/5xx = Error/Block
       const httpStatus = httpRequest.status || jsonPayload.status || 0;
       const decision = 
         jsonPayload.decision || 
@@ -258,8 +260,10 @@ serve(async (req) => {
         gandalfData.action ||
         labels.decision || 
         labels.action ||
-        (httpStatus >= 400 || httpStatus === 403 || httpStatus === 429 ? 'BLOCK' : 
-         httpStatus >= 200 && httpStatus < 400 ? 'ALLOW' : 'UNKNOWN');
+        (httpStatus === 101 ? 'ALLOW' :  // WebSocket upgrade
+         httpStatus === 403 || httpStatus === 429 ? 'BLOCK' :
+         httpStatus >= 400 ? 'BLOCK' : 
+         httpStatus >= 200 && httpStatus < 400 ? 'ALLOW' : 'ALLOW'); // Default to ALLOW for ambiguous cases
       
       return {
         id: entry.insertId || `log-${index}`,
