@@ -19,9 +19,13 @@ import {
   Network,
   Clock,
   Eye,
-  Activity
+  Activity,
+  Linkedin
 } from "lucide-react";
 import gandalfLogo from "@/assets/gandalf.png";
+import jadyPhoto from "@/assets/team/jady.jpg";
+import phuwitPhoto from "@/assets/team/phuwit.jpg";
+import supunPhoto from "@/assets/team/supun.jpg";
 
 const PitchDeck = () => {
   return (
@@ -103,6 +107,55 @@ const PitchDeck = () => {
               <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 animate-[pulse_1.5s_ease-in-out_infinite]" />
               </div>
+            </div>
+          </div>
+        </AnimatedSection>
+
+        {/* Team Section */}
+        <AnimatedSection className="py-24 px-6 bg-gradient-to-b from-background to-primary/5">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                Our Team
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                Meet the <span className="text-primary">SU Heroes</span>
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Building the future of bot identity verification
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { name: "Jady Pamella", photo: jadyPhoto, linkedin: "https://www.linkedin.com/in/jadypamella/" },
+                { name: "Phuwit Vititayanon", photo: phuwitPhoto, linkedin: "https://www.linkedin.com/in/phuwit-vititayanon-4b6503157/" },
+                { name: "Supun Chathuranga", photo: supunPhoto, linkedin: "https://www.linkedin.com/in/supun-chathuranga-190372148/" },
+              ].map((member, i) => (
+                <div 
+                  key={member.name}
+                  className="group text-center"
+                  style={{ animationDelay: `${i * 100}ms` }}
+                >
+                  <div className="relative mb-4 mx-auto w-40 h-40 rounded-full overflow-hidden border-4 border-primary/20 group-hover:border-primary/50 transition-all duration-300">
+                    <img 
+                      src={member.photo} 
+                      alt={member.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">{member.name}</h3>
+                  <a 
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-info hover:text-info/80 transition-colors"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                    <span className="text-sm">LinkedIn</span>
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
         </AnimatedSection>
