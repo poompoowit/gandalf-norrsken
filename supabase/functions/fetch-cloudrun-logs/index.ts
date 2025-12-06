@@ -131,7 +131,7 @@ serve(async (req) => {
     console.log('Using project:', credentials.project_id);
     
     // Get request parameters
-    const { serviceName, limit = 1000, timeRangeMinutes = 60, maxPages = 5 } = await req.json();
+    const { serviceName, limit = 2000, timeRangeMinutes = 60, maxPages = 10, httpOnly = true } = await req.json();
     
     // Calculate time filter
     const now = new Date();
@@ -235,8 +235,10 @@ serve(async (req) => {
       };
     });
     
-    // Filter to only include HTTP request logs
-    const entries = allEntries.filter((entry: any) => entry.isHttpRequest);
+    // Optionally filter to only include HTTP request logs
+    const entries = httpOnly 
+      ? allEntries.filter((entry: any) => entry.isHttpRequest)
+      : allEntries;
     
     console.log('HTTP request entries after filter:', entries.length, 'of', allEntries.length, 'total');
 
