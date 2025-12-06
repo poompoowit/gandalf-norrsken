@@ -1,94 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Gandalf Traffic Stream - Dark Terminal Design System */
+/* Gandalf, The Gatekeeper - Mystic Design System */
 
 @layer base {
   :root {
-    --background: 220 20% 10%;
-    --foreground: 210 20% 90%;
+    /* Graphite Gray - Main background */
+    --background: 210 14% 14%;
+    --foreground: 210 20% 92%;
 
-    --card: 220 18% 13%;
-    --card-foreground: 210 20% 90%;
+    /* Card surfaces - slightly lighter */
+    --card: 210 16% 18%;
+    --card-foreground: 210 20% 92%;
 
-    --popover: 220 18% 13%;
-    --popover-foreground: 210 20% 90%;
+    --popover: 210 16% 18%;
+    --popover-foreground: 210 20% 92%;
 
-    --primary: 174 72% 56%;
-    --primary-foreground: 220 20% 10%;
+    /* Cyber Teal - Primary actions */
+    --primary: 179 55% 51%;
+    --primary-foreground: 210 14% 14%;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 210 20% 90%;
+    /* Wizard Hat Blue - Secondary */
+    --secondary: 202 40% 55%;
+    --secondary-foreground: 210 14% 14%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 215 15% 55%;
+    /* Muted surfaces */
+    --muted: 210 14% 22%;
+    --muted-foreground: 210 15% 60%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 220 20% 10%;
+    /* Arcane Purple - Accent */
+    --accent: 254 30% 42%;
+    --accent-foreground: 210 20% 92%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 174 72% 56%;
+    /* Mystic Blue - Borders */
+    --border: 211 49% 23%;
+    --input: 211 49% 28%;
+    --ring: 179 55% 51%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Custom colors for log viewer */
     --success: 142 76% 36%;
     --success-foreground: 210 40% 98%;
     --warning: 38 92% 50%;
-    --warning-foreground: 220 20% 10%;
-    --info: 199 89% 48%;
-    --info-foreground: 220 20% 10%;
-    --human: 199 89% 48%;
-    --unknown: 280 65% 60%;
+    --warning-foreground: 210 14% 14%;
+    --info: 202 40% 55%;
+    --info-foreground: 210 14% 14%;
+    --human: 202 40% 55%;
+    --unknown: 254 30% 42%;
     --risk-low: 142 76% 36%;
     --risk-medium: 38 92% 50%;
     --risk-high: 0 72% 51%;
 
-    --sidebar-background: 220 18% 11%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 174 72% 56%;
-    --sidebar-primary-foreground: 220 20% 10%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 220 15% 22%;
-    --sidebar-ring: 174 72% 56%;
+    /* Sidebar */
+    --sidebar-background: 210 14% 12%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 179 55% 51%;
+    --sidebar-primary-foreground: 210 14% 14%;
+    --sidebar-accent: 254 30% 42%;
+    --sidebar-accent-foreground: 210 20% 92%;
+    --sidebar-border: 211 49% 23%;
+    --sidebar-ring: 179 55% 51%;
   }
 
   .dark {
-    --background: 220 20% 10%;
-    --foreground: 210 20% 90%;
-    --card: 220 18% 13%;
-    --card-foreground: 210 20% 90%;
-    --popover: 220 18% 13%;
-    --popover-foreground: 210 20% 90%;
-    --primary: 174 72% 56%;
-    --primary-foreground: 220 20% 10%;
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 210 20% 90%;
-    --muted: 220 15% 18%;
-    --muted-foreground: 215 15% 55%;
-    --accent: 38 92% 50%;
-    --accent-foreground: 220 20% 10%;
+    --background: 210 14% 14%;
+    --foreground: 210 20% 92%;
+    --card: 210 16% 18%;
+    --card-foreground: 210 20% 92%;
+    --popover: 210 16% 18%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 179 55% 51%;
+    --primary-foreground: 210 14% 14%;
+    --secondary: 202 40% 55%;
+    --secondary-foreground: 210 14% 14%;
+    --muted: 210 14% 22%;
+    --muted-foreground: 210 15% 60%;
+    --accent: 254 30% 42%;
+    --accent-foreground: 210 20% 92%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 174 72% 56%;
-    --sidebar-background: 220 18% 11%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 174 72% 56%;
-    --sidebar-primary-foreground: 220 20% 10%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 220 15% 22%;
-    --sidebar-ring: 174 72% 56%;
+    --border: 211 49% 23%;
+    --input: 211 49% 28%;
+    --ring: 179 55% 51%;
+    --sidebar-background: 210 14% 12%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 179 55% 51%;
+    --sidebar-primary-foreground: 210 14% 14%;
+    --sidebar-accent: 254 30% 42%;
+    --sidebar-accent-foreground: 210 20% 92%;
+    --sidebar-border: 211 49% 23%;
+    --sidebar-ring: 179 55% 51%;
   }
 }
 
@@ -99,7 +107,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
   }
 
   .font-mono {
@@ -113,7 +120,7 @@
   }
 
   .log-entry:hover {
-    @apply bg-secondary/50;
+    @apply bg-secondary/20;
   }
 
   .status-indicator {
@@ -218,6 +225,15 @@
   }
 
   .log-row:hover {
-    background: linear-gradient(90deg, hsl(var(--secondary) / 0.5) 0%, transparent 100%);
+    background: linear-gradient(90deg, hsl(var(--accent) / 0.15) 0%, transparent 100%);
+  }
+
+  /* Gradient utilities */
+  .gradient-arcane {
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 100%);
+  }
+
+  .gradient-mystic {
+    background: linear-gradient(135deg, hsl(211 49% 23%) 0%, hsl(var(--accent)) 100%);
   }
 }

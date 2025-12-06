@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Activity, Shield } from "lucide-react";
+import { Activity, Shield, Presentation } from "lucide-react";
+import gandalfLogo from "@/assets/gandalf.png";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
       <div className="text-center max-w-2xl">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <span className="text-5xl">🧙</span>
-          <h1 className="text-4xl font-bold text-primary">Gandalf Dashboard</h1>
+          <img src={gandalfLogo} alt="Gandalf" className="w-16 h-16" />
+          <h1 className="text-4xl font-bold text-primary">Gandalf, The Gatekeeper</h1>
         </div>
         
         <p className="text-lg text-muted-foreground mb-8">
@@ -20,6 +21,12 @@ const Index = () => {
             <Link to="/logs">
               <Activity className="h-5 w-5" />
               View Traffic Logs
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="gap-2">
+            <Link to="/pitch">
+              <Presentation className="h-5 w-5" />
+              View Pitch Deck
             </Link>
           </Button>
         </div>
