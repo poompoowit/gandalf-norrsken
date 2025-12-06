@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { RefreshCw, Check, Loader2 } from "lucide-react";
+import { RefreshCw, Check, Loader2, Shield, ShieldAlert, ShieldX, Activity, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 // Types
@@ -81,6 +82,76 @@ function useCloudRunLogs() {
   return { entries, isLoading, error, isConnected, refresh: fetchLogs, stats };
 }
 
+// Stat Card Component
+function StatCard({ 
+  label, 
+  value, 
+  icon: Icon, 
+  variant = 'default' 
+}: { 
+  label: string; 
+  value: number; 
+  icon: React.ElementType;
+  variant?: 'default' | 'success' | 'warning' | 'destructive';
+}) {
+  const variantClasses = {
+    default: 'stat-card',
+    success: 'stat-card stat-card-success',
+    warning: 'stat-card stat-card-warning',
+    destructive: 'stat-card stat-card-destructive',
+  };
+
+  const iconClasses = {
+    default: 'text-primary',
+    success: 'text-success',
+    warning: 'text-warning',
+    destructive: 'text-destructive',
+  };
+
+  const valueClasses = {
+    default: 'text-foreground',
+    success: 'text-success',
+    warning: 'text-warning',
+    destructive: 'text-destructive',
+  };
+
+  return (
+    <div className={cn(variantClasses[variant], "group hover:scale-[1.02] transition-transform duration-200")}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-medium text-muted-foreground tracking-wider uppercase mb-1">{label}</p>
+          <p className={cn("text-3xl font-bold font-mono", valueClasses[variant])}>{value}</p>
+        </div>
+        <div className={cn("p-3 rounded-lg bg-secondary/50", iconClasses[variant])}>
+          <Icon className="h-6 w-6" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Live Indicator Component
+function LiveIndicator({ isConnected }: { isConnected: boolean }) {
+  return (
+    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50">
+      <span 
+        className={cn(
+          "w-2.5 h-2.5 rounded-full",
+          isConnected ? "bg-success live-indicator" : "bg-destructive"
+        )}
+        style={{ 
+          boxShadow: isConnected 
+            ? '0 0 12px hsl(var(--success))' 
+            : '0 0 12px hsl(var(--destructive))' 
+        }} 
+      />
+      <span className="text-sm font-medium text-foreground">
+        {isConnected ? 'Live' : 'Offline'}
+      </span>
+    </div>
+  );
+}
+
 // Header Component
 function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
   stats: LogStats;
@@ -89,51 +160,41 @@ function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
   onRefresh: () => void;
 }) {
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
-      <div className="flex items-center gap-3">
-        <span className="text-2xl">🧙</span>
-        <h1 className="text-xl font-semibold text-primary">Gandalf Traffic Stream</h1>
-      </div>
-
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground font-mono">{stats.total}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">TOTAL</div>
+    <header className="dashboard-header border-b border-border/50">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+            <span className="text-2xl">🧙</span>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground font-mono">{stats.allowed}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">ALLOWED</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-warning font-mono">{stats.challenged}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">CHALLENGED</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-destructive font-mono">{stats.blocked}</div>
-            <div className="text-xs text-muted-foreground tracking-wider">BLOCKED</div>
+          <div>
+            <h1 className="text-xl font-bold text-foreground">Gandalf Traffic Stream</h1>
+            <p className="text-sm text-muted-foreground">Real-time request monitoring</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={onRefresh}
             disabled={isLoading}
-            className="text-muted-foreground hover:text-foreground"
+            className="border-border/50 hover:bg-secondary/50"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={cn("h-4 w-4 mr-2", isLoading && "animate-spin")} />
             Refresh
           </Button>
+          <LiveIndicator isConnected={isConnected} />
+        </div>
+      </div>
 
-          <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} 
-                  style={{ boxShadow: isConnected ? '0 0 8px rgb(34 197 94)' : '0 0 8px rgb(239 68 68)' }} />
-            <span className="text-sm text-muted-foreground">
-              {isConnected ? 'Connected' : 'Disconnected'}
-            </span>
-          </div>
+      {/* Stats Grid */}
+      <div className="px-6 pb-6">
+        <div className="grid grid-cols-4 gap-4">
+          <StatCard label="Total Requests" value={stats.total} icon={Activity} variant="default" />
+          <StatCard label="Allowed" value={stats.allowed} icon={Shield} variant="success" />
+          <StatCard label="Challenged" value={stats.challenged} icon={ShieldAlert} variant="warning" />
+          <StatCard label="Blocked" value={stats.blocked} icon={ShieldX} variant="destructive" />
         </div>
       </div>
     </header>
@@ -141,48 +202,76 @@ function LogHeader({ stats, isConnected, isLoading, onRefresh }: {
 }
 
 // Log Entry Component
-function LogEntry({ entry }: { entry: LogEntryData }) {
+function LogEntry({ entry, index }: { entry: LogEntryData; index: number }) {
   const formattedTime = formatTimestamp(entry.timestamp);
   const isAllowed = entry.decision === 'ALLOW';
   const isChallenged = entry.decision === 'CHALLENGE';
   
+  const borderColor = isAllowed 
+    ? 'border-l-success' 
+    : isChallenged 
+    ? 'border-l-warning' 
+    : 'border-l-destructive';
+
+  const checkColor = isAllowed 
+    ? 'text-success' 
+    : isChallenged 
+    ? 'text-warning' 
+    : 'text-destructive';
+
   return (
-    <div className={cn(
-      "py-3 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 items-center border-l-4 transition-all duration-200 hover:bg-secondary/50",
-      isAllowed ? "border-l-success" : isChallenged ? "border-l-warning" : "border-l-destructive"
-    )}>
+    <div 
+      className={cn(
+        "log-row py-3 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 items-center border-l-4",
+        borderColor
+      )}
+      style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}
+    >
       <div className="flex items-center justify-center w-8">
-        <Check className={cn("h-5 w-5", isAllowed ? "text-success" : isChallenged ? "text-warning" : "text-destructive")} />
+        <div className={cn("p-1 rounded-full bg-secondary/50", checkColor)}>
+          <Check className="h-4 w-4" />
+        </div>
       </div>
 
-      <div className="font-mono text-sm text-primary">
+      <div className="font-mono text-sm text-primary hover:underline cursor-pointer">
         {entry.traceId || entry.id.substring(0, 8)}
       </div>
 
-      <div className="flex items-center gap-4 min-w-0">
+      <div className="flex items-center gap-3 min-w-0">
         <span className="font-semibold text-foreground">
-          {entry.method} {entry.path ? new URL(entry.path, 'http://localhost').pathname : ''}
+          <span className="text-primary font-mono">{entry.method}</span>
+          {' '}
+          <span className="text-muted-foreground">
+            {entry.path ? new URL(entry.path, 'http://localhost').pathname : ''}
+          </span>
         </span>
         <Badge
           variant="outline"
-          className="text-xs px-3 py-1 font-medium border-primary/50 text-primary bg-primary/10"
+          className="text-xs px-2.5 py-0.5 font-medium border-info/50 text-info bg-info/10 shrink-0"
         >
           {entry.classification}
         </Badge>
       </div>
 
       <div className="text-right">
-        <span className="text-muted-foreground">Risk: </span>
-        <span className="font-semibold text-foreground">{entry.risk}</span>
+        <span className="text-muted-foreground text-sm">Risk: </span>
+        <span className={cn(
+          "font-bold font-mono",
+          entry.risk === 0 ? "text-success" :
+          entry.risk <= 3 ? "text-warning" :
+          "text-destructive"
+        )}>
+          {entry.risk}
+        </span>
       </div>
 
       <div className="text-center">
         <Badge
           className={cn(
-            "text-xs px-4 py-1 font-semibold",
-            isAllowed ? "bg-success text-success-foreground hover:bg-success/90" :
-            isChallenged ? "bg-warning text-warning-foreground hover:bg-warning/90" :
-            "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            "text-xs px-3 py-1 font-semibold border-0",
+            isAllowed ? "bg-success/20 text-success hover:bg-success/30" :
+            isChallenged ? "bg-warning/20 text-warning hover:bg-warning/30" :
+            "bg-destructive/20 text-destructive hover:bg-destructive/30"
           )}
         >
           {entry.decision}
@@ -195,7 +284,6 @@ function LogEntry({ entry }: { entry: LogEntryData }) {
     </div>
   );
 }
-
 
 function formatTimestamp(timestamp: string): string {
   if (!timestamp) return '—';
@@ -228,21 +316,25 @@ function LogViewer({ entries, isLoading, error }: {
 
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center p-8">
-          <div className="text-destructive text-lg font-medium mb-2">Error Loading Logs</div>
-          <div className="text-muted-foreground text-sm max-w-md">{error}</div>
-        </div>
+      <div className="flex-1 flex items-center justify-center">
+        <Card className="p-8 text-center max-w-md border-destructive/50 bg-destructive/5">
+          <ShieldX className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-destructive mb-2">Connection Error</h3>
+          <p className="text-sm text-muted-foreground">{error}</p>
+        </Card>
       </div>
     );
   }
 
   if (isLoading && entries.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-background">
+      <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <div className="text-muted-foreground">Loading logs from Cloud Run...</div>
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin mx-auto" />
+            <Radio className="h-6 w-6 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          <p className="text-muted-foreground mt-4">Connecting to traffic stream...</p>
         </div>
       </div>
     );
@@ -250,33 +342,35 @@ function LogViewer({ entries, isLoading, error }: {
 
   if (entries.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center p-8">
-          <div className="text-2xl mb-2">📋</div>
-          <div className="text-muted-foreground">No logs found</div>
-          <div className="text-sm text-muted-foreground/60 mt-1">
-            Logs will appear here when your Cloud Run services receive traffic
-          </div>
-        </div>
+      <div className="flex-1 flex items-center justify-center">
+        <Card className="p-8 text-center max-w-md border-border/50">
+          <Activity className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">No Traffic Yet</h3>
+          <p className="text-sm text-muted-foreground">
+            Requests will appear here in real-time when your services receive traffic
+          </p>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto bg-background" style={{ scrollbarWidth: 'thin', scrollbarColor: 'hsl(var(--border)) transparent' }}>
-      <div className="sticky top-0 z-10 bg-card border-b border-border py-2 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 text-xs text-muted-foreground font-medium tracking-wider">
+    <div ref={scrollRef} className="flex-1 overflow-y-auto terminal-scroll">
+      {/* Table Header */}
+      <div className="sticky top-0 z-10 glass-effect border-b border-border/50 py-3 px-4 grid grid-cols-[auto_100px_1fr_100px_100px_100px] gap-4 text-xs text-muted-foreground font-semibold tracking-wider uppercase">
         <div className="w-8" />
-        <div>TRACE</div>
-        <div>REQUEST</div>
-        <div className="text-right">RISK</div>
-        <div className="text-center">DECISION</div>
-        <div className="text-right">TIME</div>
+        <div>Trace ID</div>
+        <div>Request</div>
+        <div className="text-right">Risk</div>
+        <div className="text-center">Decision</div>
+        <div className="text-right">Time</div>
       </div>
 
-      <div className="divide-y divide-border/50">
+      {/* Log Entries */}
+      <div className="divide-y divide-border/30">
         {entries.map((entry, index) => (
-          <div key={entry.id || index} className="animate-fade-in" style={{ animationDelay: `${Math.min(index * 20, 200)}ms` }}>
-            <LogEntry entry={entry} />
+          <div key={entry.id || index} className="animate-fade-in">
+            <LogEntry entry={entry} index={index} />
           </div>
         ))}
       </div>
