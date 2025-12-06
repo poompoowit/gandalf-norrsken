@@ -20,7 +20,8 @@ import {
   Clock,
   Eye,
   Activity,
-  Linkedin
+  Linkedin,
+  Youtube
 } from "lucide-react";
 import gandalfLogo from "@/assets/gandalf.png";
 import jadyPhoto from "@/assets/team/jady.jpg";
@@ -128,9 +129,9 @@ const PitchDeck = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { name: "Jady Pamella", photo: jadyPhoto, linkedin: "https://www.linkedin.com/in/jadypamella/" },
-                { name: "Phuwit Vititayanon", photo: phuwitPhoto, linkedin: "https://www.linkedin.com/in/phuwit-vititayanon-4b6503157/" },
-                { name: "Supun Chathuranga", photo: supunPhoto, linkedin: "https://www.linkedin.com/in/supun-chathuranga-190372148/" },
+                { name: "Jady Pamella", tagline: "AI and Technology Leader", photo: jadyPhoto, linkedin: "https://www.linkedin.com/in/jadypamella/" },
+                { name: "Phuwit Vititayanon", tagline: "AI Maker, Data Scientist", photo: phuwitPhoto, linkedin: "https://www.linkedin.com/in/phuwit-vititayanon-4b6503157/" },
+                { name: "Supun Chathuranga", tagline: "AI Engineer", photo: supunPhoto, linkedin: "https://www.linkedin.com/in/supun-chathuranga-190372148/" },
               ].map((member, i) => (
                 <div 
                   key={member.name}
@@ -144,7 +145,8 @@ const PitchDeck = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">{member.name}</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{member.tagline}</p>
                   <a 
                     href={member.linkedin}
                     target="_blank"
@@ -753,6 +755,15 @@ const PitchDeck = () => {
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
+            <a 
+              href="https://www.youtube.com/watch?v=SSAKVqXt2-A" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-destructive hover:text-destructive/80 transition-colors"
+            >
+              <Youtube className="w-5 h-5" />
+              <span className="text-sm">Watch Demo</span>
+            </a>
             <p>© 2025 SU Heroes | Built for Tzafon AI Safety Fixathon (Challenge 1)</p>
           </div>
         </footer>
