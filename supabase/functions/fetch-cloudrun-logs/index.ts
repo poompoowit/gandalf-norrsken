@@ -203,17 +203,63 @@ serve(async (req) => {
     
     console.log(`Total raw entries fetched: ${allRawEntries.length} in ${pageCount} pages`);
     
+    // Find and log a sample HTTP request entry to understand structure
+    const sampleHttpEntry = allRawEntries.find((e: any) => e.httpRequest?.requestMethod);
+    if (sampleHttpEntry) {
+      console.log('Sample HTTP request entry:', JSON.stringify(sampleHttpEntry, null, 2));
+    } else {
+      console.log('No HTTP request entries found in sample');
+      // Log first non-WebSocket entry
+      const nonWsEntry = allRawEntries.find((e: any) => !e.textPayload?.includes('WebSocket'));
+      if (nonWsEntry) {
+        console.log('Sample non-WS entry:', JSON.stringify(nonWsEntry, null, 2));
+      }
+    }
+    
     // Transform and filter for HTTP request logs only
     const allEntries = allRawEntries.map((entry: any, index: number) => {
       const httpRequest = entry.httpRequest || {};
       const jsonPayload = entry.jsonPayload || {};
       const textPayload = entry.textPayload || '';
+      const labels = entry.labels || {};
       
-      // Extract Gandalf-specific fields from jsonPayload or labels
-      const classification = jsonPayload.classification || jsonPayload.type || entry.labels?.classification || 'HUMAN';
-      const risk = jsonPayload.risk || jsonPayload.risk_score || entry.labels?.risk || 0;
-      const decision = jsonPayload.decision || jsonPayload.action || entry.labels?.decision || 
-        (httpRequest.status && httpRequest.status < 400 ? 'ALLOW' : 'BLOCK');
+      // Look for Gandalf-specific fields in various locations
+      // Check nested structures that might contain the data
+      const gandalfData = jsonPayload.gandalf || jsonPayload.data || {};
+      
+      // Extract classification - check multiple possible locations
+      const classification = 
+        jsonPayload.classification || 
+        jsonPayload.type || 
+        gandalfData.classification ||
+        labels.classification || 
+        labels.type ||
+        'HUMAN';
+      
+      // Extract risk score - check multiple possible locations  
+      const risk = 
+        jsonPayload.risk || 
+        jsonPayload.risk_score || 
+        jsonPayload.riskScore ||
+        gandalfData.risk ||
+        gandalfData.risk_score ||
+        labels.risk || 
+        labels.risk_score ||
+        httpRequest.responseSize || // Sometimes used as indicator
+        0;
+      
+      // Extract decision - check multiple possible locations
+      // For blocked requests, status >= 400 typically indicates block
+      const httpStatus = httpRequest.status || jsonPayload.status || 0;
+      const decision = 
+        jsonPayload.decision || 
+        jsonPayload.action || 
+        gandalfData.decision ||
+        gandalfData.action ||
+        labels.decision || 
+        labels.action ||
+        (httpStatus >= 400 || httpStatus === 403 || httpStatus === 429 ? 'BLOCK' : 
+         httpStatus >= 200 && httpStatus < 400 ? 'ALLOW' : 'UNKNOWN');
       
       return {
         id: entry.insertId || `log-${index}`,
@@ -222,7 +268,7 @@ serve(async (req) => {
         serviceName: entry.resource?.labels?.service_name || 'unknown',
         method: httpRequest.requestMethod || jsonPayload.method || '',
         path: httpRequest.requestUrl || jsonPayload.path || '',
-        status: httpRequest.status || jsonPayload.status || '',
+        status: httpStatus,
         latency: httpRequest.latency || '',
         userAgent: httpRequest.userAgent || '',
         remoteIp: httpRequest.remoteIp || '',
@@ -232,6 +278,8 @@ serve(async (req) => {
         risk,
         decision,
         isHttpRequest: !!(httpRequest.requestMethod || jsonPayload.method),
+        // Include raw payload for debugging
+        rawJsonPayload: jsonPayload,
       };
     });
     
