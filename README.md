@@ -33,8 +33,11 @@ https://gandalf-norrsken.lovable.app/logs
 **GitHub Repository:**  
 https://github.com/poompoowit/gandalf-norrsken
 
-Demo
+**Demo Video:**
 https://youtu.be/Fcqh9bwEr_Q
+
+**Pitch Deck:**
+https://gandalf-norrsken.lovable.app/pitch
 
 If you have questions, reach out via LinkedIn or email **hello@jadypamella.com**.
 
