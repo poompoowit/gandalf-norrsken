@@ -31,7 +31,7 @@ async function createJWT(credentials: ServiceAccountCredentials): Promise<string
   const payload = {
     iss: credentials.client_email,
     sub: credentials.client_email,
-    aud: "https://logging.googleapis.com/",
+    aud: credentials.token_uri,
     iat: now,
     exp: now + 3600, // 1 hour expiry
     scope: "https://www.googleapis.com/auth/logging.read",
