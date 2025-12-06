@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Activity, Shield, Presentation } from "lucide-react";
 import gandalfLogo from "@/assets/gandalf.png";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-8">
+    <div className="min-h-screen flex flex-col bg-background">
+      <div className="flex-1 flex flex-col items-center justify-center p-8">
       <div className="text-center max-w-2xl">
         <div className="flex items-center justify-center gap-3 mb-6">
           <img src={gandalfLogo} alt="Gandalf" className="w-16 h-16" />
@@ -53,6 +55,8 @@ const Index = () => {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };
