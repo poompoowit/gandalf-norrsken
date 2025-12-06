@@ -66,7 +66,7 @@ const PitchDeck = () => {
           <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
             <img src={gandalfLogo} alt="Gandalf" className="w-32 h-32 mb-6 mx-auto animate-[pulse_3s_ease-in-out_infinite]" />
             <h1 className="text-5xl md:text-7xl font-black text-foreground mb-4 tracking-tight">
-              Gandalf Gateway
+              Gandalf, The Gatekeeper
             </h1>
             <p className="text-xl md:text-2xl text-primary font-medium mb-6">
               Sovereign Bot Identity & Verification

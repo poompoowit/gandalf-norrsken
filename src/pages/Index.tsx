@@ -9,7 +9,7 @@ const Index = () => {
       <div className="text-center max-w-2xl">
         <div className="flex items-center justify-center gap-3 mb-6">
           <img src={gandalfLogo} alt="Gandalf" className="w-16 h-16" />
-          <h1 className="text-4xl font-bold text-primary">Gandalf Dashboard</h1>
+          <h1 className="text-4xl font-bold text-primary">Gandalf, The Gatekeeper</h1>
         </div>
         
         <p className="text-lg text-muted-foreground mb-8">
