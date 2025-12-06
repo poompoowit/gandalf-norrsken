@@ -666,12 +666,12 @@ const PitchDeck = () => {
 
         {/* Footer */}
         <footer className="py-8 px-6 border-t border-border">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="max-w-6xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground text-center">
             <div className="flex items-center gap-2">
               <img src={gandalfLogo} alt="Gandalf" className="w-8 h-8" />
               <span>Gandalf Gateway</span>
             </div>
-            <p>Sovereign Bot Identity Framework</p>
+            <p>© 2025 SU Heroes' Gandalf, The Gatekeeper | Built for Tzafon AI Safety Fixathon (Challenge 1)</p>
           </div>
         </footer>
       </main>
