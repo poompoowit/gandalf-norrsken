@@ -719,12 +719,41 @@ const PitchDeck = () => {
 
         {/* Footer */}
         <footer className="py-8 px-6 border-t border-border">
-          <div className="max-w-6xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground text-center">
+          <div className="max-w-6xl mx-auto flex flex-col items-center gap-4 text-sm text-muted-foreground text-center">
             <div className="flex items-center gap-2">
               <img src={gandalfLogo} alt="Gandalf" className="w-8 h-8" />
-              <span>Gandalf Gateway</span>
+              <span className="font-semibold text-foreground">Gandalf, The Gatekeeper</span>
             </div>
-            <p>© 2025 SU Heroes' Gandalf, The Gatekeeper | Built for Tzafon AI Safety Fixathon (Challenge 1)</p>
+            <div className="flex items-center gap-4">
+              <a 
+                href="https://www.linkedin.com/in/jadypamella/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-info transition-colors"
+                title="Jady Pamella"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/phuwit-vititayanon-4b6503157/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-info transition-colors"
+                title="Phuwit Vititayanon"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/supun-chathuranga-190372148/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-info transition-colors"
+                title="Supun Chathuranga"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </div>
+            <p>© 2025 SU Heroes | Built for Tzafon AI Safety Fixathon (Challenge 1)</p>
           </div>
         </footer>
       </main>
