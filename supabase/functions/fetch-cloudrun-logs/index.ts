@@ -131,7 +131,7 @@ serve(async (req) => {
     console.log('Using project:', credentials.project_id);
     
     // Get request parameters
-    const { serviceName, limit = 500, timeRangeMinutes = 60 } = await req.json();
+    const { serviceName, limit = 1000, timeRangeMinutes = 60, maxPages = 5 } = await req.json();
     
     // Calculate time filter
     const now = new Date();
@@ -149,35 +149,62 @@ serve(async (req) => {
     
     console.log('Fetching logs with filter:', filter);
     
-    // Fetch logs from Google Cloud Logging API
-    const logsResponse = await fetch(
-      `https://logging.googleapis.com/v2/entries:list`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          resourceNames: [`projects/${credentials.project_id}`],
-          filter: filter,
-          orderBy: 'timestamp desc',
-          pageSize: limit,
-        }),
+    // Fetch logs with pagination
+    let allRawEntries: any[] = [];
+    let nextPageToken: string | undefined = undefined;
+    let pageCount = 0;
+    const pageSize = Math.min(limit, 500); // Google Cloud Logging max page size is 1000
+    
+    while (pageCount < maxPages) {
+      pageCount++;
+      console.log(`Fetching page ${pageCount}...`);
+      
+      const requestBody: any = {
+        resourceNames: [`projects/${credentials.project_id}`],
+        filter: filter,
+        orderBy: 'timestamp desc',
+        pageSize: pageSize,
+      };
+      
+      if (nextPageToken) {
+        requestBody.pageToken = nextPageToken;
       }
-    );
+      
+      const logsResponse = await fetch(
+        `https://logging.googleapis.com/v2/entries:list`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
-    if (!logsResponse.ok) {
-      const errorText = await logsResponse.text();
-      console.error('Logs API error:', errorText);
-      throw new Error(`Failed to fetch logs: ${logsResponse.status}`);
+      if (!logsResponse.ok) {
+        const errorText = await logsResponse.text();
+        console.error('Logs API error:', errorText);
+        throw new Error(`Failed to fetch logs: ${logsResponse.status}`);
+      }
+
+      const logsData = await logsResponse.json();
+      const entries = logsData.entries || [];
+      console.log(`Page ${pageCount}: fetched ${entries.length} entries`);
+      
+      allRawEntries = allRawEntries.concat(entries);
+      nextPageToken = logsData.nextPageToken;
+      
+      // Stop if no more pages or we have enough entries
+      if (!nextPageToken || allRawEntries.length >= limit) {
+        break;
+      }
     }
-
-    const logsData = await logsResponse.json();
-    console.log('Fetched', logsData.entries?.length || 0, 'log entries');
+    
+    console.log(`Total raw entries fetched: ${allRawEntries.length} in ${pageCount} pages`);
     
     // Transform and filter for HTTP request logs only
-    const allEntries = (logsData.entries || []).map((entry: any, index: number) => {
+    const allEntries = allRawEntries.map((entry: any, index: number) => {
       const httpRequest = entry.httpRequest || {};
       const jsonPayload = entry.jsonPayload || {};
       const textPayload = entry.textPayload || '';
@@ -215,13 +242,14 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ 
       entries, 
-      nextPageToken: logsData.nextPageToken,
+      hasMore: !!nextPageToken,
       timeRange: {
         startTime: startTime.toISOString(),
         endTime: now.toISOString(),
         minutes: timeRangeMinutes,
       },
-      totalFetched: logsData.entries?.length || 0,
+      totalFetched: allRawEntries.length,
+      pagesFetched: pageCount,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
