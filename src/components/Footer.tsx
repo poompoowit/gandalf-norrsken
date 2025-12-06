@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto px-4 text-center space-y-4 text-muted-foreground">
         <div className="flex items-center justify-center gap-2">
           <img src={gandalfLogo} alt="Gandalf" className="w-8 h-8" />
-          <span className="font-semibold text-destructive">Gandalf, The Gatekeeper</span>
+          <span className="font-semibold text-foreground">Gandalf, The Gatekeeper</span>
         </div>
         <div className="flex items-center justify-center gap-4">
           <a 
