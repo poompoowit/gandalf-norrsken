@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Activity, Shield } from "lucide-react";
+import { Activity, Shield, Presentation } from "lucide-react";
 
 const Index = () => {
   return (
@@ -20,6 +20,12 @@ const Index = () => {
             <Link to="/logs">
               <Activity className="h-5 w-5" />
               View Traffic Logs
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="gap-2">
+            <Link to="/pitch">
+              <Presentation className="h-5 w-5" />
+              View Pitch Deck
             </Link>
           </Button>
         </div>
