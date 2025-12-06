@@ -716,6 +716,20 @@ const PitchDeck = () => {
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
+
+            {/* Demo Video */}
+            <div className="mt-12 w-full max-w-4xl">
+              <h3 className="text-xl font-semibold text-foreground mb-4 text-center">Watch the Demo</h3>
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-border shadow-lg">
+                <iframe
+                  src="https://www.youtube.com/embed/Fcqh9bwEr_Q"
+                  title="Gandalf Demo Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+            </div>
           </div>
         </AnimatedSection>
 
