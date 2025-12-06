@@ -140,6 +140,57 @@
     }
   }
 
+  @keyframes live-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+  }
+
+  .live-indicator {
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden rounded-xl border border-border/50 bg-card p-4;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent);
+  }
+
+  .stat-card-success::before {
+    background: linear-gradient(90deg, transparent, hsl(var(--success) / 0.7), transparent);
+  }
+
+  .stat-card-warning::before {
+    background: linear-gradient(90deg, transparent, hsl(var(--warning) / 0.7), transparent);
+  }
+
+  .stat-card-destructive::before {
+    background: linear-gradient(90deg, transparent, hsl(var(--destructive) / 0.7), transparent);
+  }
+
+  .dashboard-header {
+    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(12px);
+    background: hsl(var(--card) / 0.8);
+  }
+
   .terminal-scroll {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -160,5 +211,13 @@
 
   .terminal-scroll::-webkit-scrollbar-thumb:hover {
     background-color: hsl(var(--muted-foreground));
+  }
+
+  .log-row {
+    @apply transition-all duration-200;
+  }
+
+  .log-row:hover {
+    background: linear-gradient(90deg, hsl(var(--secondary) / 0.5) 0%, transparent 100%);
   }
 }
