@@ -21,6 +21,7 @@ import {
   Eye,
   Activity
 } from "lucide-react";
+import gandalfLogo from "@/assets/gandalf.png";
 
 const PitchDeck = () => {
   return (
@@ -35,7 +36,7 @@ const PitchDeck = () => {
             </Link>
           </Button>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🧙</span>
+            <img src={gandalfLogo} alt="Gandalf" className="w-8 h-8" />
             <span className="font-bold text-lg hidden sm:block">Gandalf</span>
           </div>
           <Button asChild size="sm" className="gap-2">
@@ -58,7 +59,7 @@ const PitchDeck = () => {
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-info/10 rounded-full blur-3xl" />
           
           <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-            <div className="text-[120px] mb-6 animate-[pulse_3s_ease-in-out_infinite]">🧙</div>
+            <img src={gandalfLogo} alt="Gandalf" className="w-32 h-32 mb-6 mx-auto animate-[pulse_3s_ease-in-out_infinite]" />
             <h1 className="text-5xl md:text-7xl font-black text-foreground mb-4 tracking-tight">
               Gandalf Gateway
             </h1>
@@ -622,7 +623,7 @@ const PitchDeck = () => {
         {/* Summary Section */}
         <AnimatedSection className="py-24 px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="text-8xl mb-8">🧙</div>
+            <img src={gandalfLogo} alt="Gandalf" className="w-32 h-32 mb-8 mx-auto" />
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               The Gandalf Rule
             </h2>
@@ -667,7 +668,7 @@ const PitchDeck = () => {
         <footer className="py-8 px-6 border-t border-border">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🧙</span>
+              <img src={gandalfLogo} alt="Gandalf" className="w-8 h-8" />
               <span>Gandalf Gateway</span>
             </div>
             <p>Sovereign Bot Identity Framework</p>
