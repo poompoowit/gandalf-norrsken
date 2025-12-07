@@ -238,11 +238,9 @@ This shifts traffic protection from reactive to proactive.
 - Cloud Run deployment  
 - Tzafon AI simulation integration  
 - Full documentation and testing  
-
-### Pre-Fixathon
-- Basic gateway proxy  
-- Minimal trust token parser  
-- Simple mock target app  
+- Gateway proxy  
+- Trust token parser  
+- Mock target app  
 
 ---
 
